@@ -1,0 +1,57 @@
+extends layout
+
+block content
+    h1 #{title} Login
+
+    div.loginbox
+        form(id="login_form" name="login_form")
+            div
+                label handle
+                input(type="text", name="user")
+            div
+                label password
+                input(type="password", name="pass")
+            div
+                input(type="submit", value="login")
+    script.
+        var loginForm = document.getElementById("login_form");
+        loginForm.addEventListener("submit", login);
+
+        function login(event) {
+            event.preventDefault();
+            var login = login_form.elements.user.value;
+            var password = login_form.elements.pass.value;
+            var SAMLResponse = document.URL.split('=')[1];
+            xhpPost("login=" + login + "&password=" + password + "&SAMLResponse=" + SAMLResponse);
+        }
+
+        function xhpPost(params) {
+            var xhp;
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xhp = new XMLHttpRequest();
+            }
+            else {
+                // code for IE6, IE5
+                xhp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xhp.onreadystatechange = function() {
+                var response;
+                if (xhp.readyState == XMLHttpRequest.DONE) {
+                    if (xhp.status == 200) {
+                        response = JSON.parse(xhp.response);
+                    }
+                    else if (xhp.status == 400) {
+                        console.log('There was an error 400');
+                    }
+                    else {
+                        console.log('something else other than 200 was returned');
+                    }
+                }
+            }
+
+            xhp.open("POST", "/sso-login", true);
+            xhp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhp.send(params);
+        }
