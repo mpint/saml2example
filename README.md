@@ -11,4 +11,6 @@ To run:
     cd ip && npm i && cd ../sp && npm i
     Terminal 1: cd ip && npm start
     Terminal 2: cd sp && npm start
-    [Go to Service Provider] (http://localhost:4000)
+    
+In browser:
+[Go to Service Provider] (http://localhost:4000)
